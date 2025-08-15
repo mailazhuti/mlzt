@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title></title>
+    
+    <!-- 微信分享配置 Meta 标签 -->
+    <meta property="og:title" content="" />
+    <meta property="og:description" content="" />
+    <meta property="og:image" content="" />
+    <meta property="og:url" content="" />
+    <meta property="og:type" content="website" />
+    
+    <!-- 动态加载分享配置 -->
+    <script>
+      (function() {
+        // 从URL参数获取目标链接
+        const urlParams = new URLSearchParams(window.location.search);
+        const targetUrl = urlParams.get('url') || 'https://bt.iosv2.top';
+        
+        // 获取分享配置并更新 meta 标签
+        fetch('https://bt.iosv2.top/api/admin/config')
+          .then(response => response.json())
+          .then(data => {
+            if (data.success) {
+              const config = data.data;
+              
+              // 只在有配置值时才更新
+              if (config.share_title && config.share_title.value) {
+                document.title = config.share_title.value;
+                const ogTitle = document.querySelector('meta[property="og:title"]');
+                if (ogTitle) ogTitle.content = config.share_title.value;
+              }
+              
+              if (config.share_desc && config.share_desc.value) {
+                const ogDesc = document.querySelector('meta[property="og:description"]');
+                if (ogDesc) ogDesc.content = config.share_desc.value;
+              }
+              
+              if (config.share_image_url && config.share_image_url.value) {
+                const ogImage = document.querySelector('meta[property="og:image"]');
+                if (ogImage) {
+                  const imageUrl = config.share_image_url.value.startsWith('http') 
+                    ? config.share_image_url.value 
+                    : 'https://bt.iosv2.top' + config.share_image_url.value;
+                  ogImage.content = imageUrl;
+                }
+              }
+              
+              const ogUrl = document.querySelector('meta[property="og:url"]');
+              if (ogUrl) ogUrl.content = window.location.href;
+            }
+          })
+          .catch(error => {
+            console.log('Failed to load share config:', error);
+          });
+        
+        // 页面加载完成后立即跳转
+        window.addEventListener('load', function() {
+          window.location.href = targetUrl;
+        });
+      })();
+    </script>
+    
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+      
+      html, body {
+        margin: 0;
+        padding: 0;
+        background: white;
+        height: 100%;
+        overflow: hidden;
+      }
+      
+      .container {
+        min-height: 100vh;
+        width: 100%;
+        display: none;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container"></div>
+  </body>
+</html>
