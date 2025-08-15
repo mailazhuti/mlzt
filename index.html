@@ -16,26 +16,42 @@
     <meta name="title" content="1113333333" />
     <meta name="description" content="222222222222222222222222222222" />
     
+    <!-- 更多描述标签确保微信能读取 -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="1113333333" />
+    <meta name="twitter:description" content="222222222222222222222222222222" />
+    <meta name="twitter:image" content="https://bt.iosv2.top/images/share-image.jpg" />
+    <meta property="description" content="222222222222222222222222222222" />
+    <meta name="summary" content="222222222222222222222222222222" />
+    
     <script>
+      // 立即设置分享链接为防红链接
+      (function() {
+        // 构建当前防红链接URL
+        const currentUrl = window.location.href;
+        
+        // 立即更新 og:url 为当前防红页面URL
+        const ogUrl = document.querySelector('meta[property="og:url"]');
+        if (ogUrl) ogUrl.content = currentUrl;
+      })();
+      
       document.addEventListener('DOMContentLoaded', function() {
         const urlParams = new URLSearchParams(window.location.search);
         const targetUrl = urlParams.get('target') || urlParams.get('url');
         
-        // 更新 og:url 为当前页面URL
-        const ogUrl = document.querySelector('meta[property="og:url"]');
-        if (ogUrl) ogUrl.content = window.location.href;
-        
         console.log('防红页面信息:');
+        console.log('当前URL:', window.location.href);
         console.log('标题:', document.title);
         console.log('OG标题:', document.querySelector('meta[property="og:title"]')?.content);
         console.log('OG描述:', document.querySelector('meta[property="og:description"]')?.content);
+        console.log('OG链接:', document.querySelector('meta[property="og:url"]')?.content);
         console.log('目标URL:', targetUrl);
         
         if (targetUrl) {
           // 给微信足够时间读取meta标签
           setTimeout(function() {
             window.location.replace(targetUrl);
-          }, 2000);
+          }, 1000);
         }
       });
     </script>
@@ -52,23 +68,9 @@
         height: 100%;
         overflow: hidden;
       }
-      
-      .debug {
-        position: fixed;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        text-align: center;
-        font-size: 14px;
-        color: #333;
-      }
     </style>
   </head>
   <body>
-    <div class="debug">
-      <div>分享测试页面</div>
-      <div>标题: 1113333333</div>
-      <div>正在跳转...</div>
-    </div>
+    <!-- 静默跳转页面 -->
   </body>
 </html>
