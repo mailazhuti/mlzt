@@ -5,10 +5,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title></title>
     
+    <!-- 只设置分享链接，不设置内容 -->
+    <meta property="og:url" content="" />
+    
     <script>
       (function() {
         const urlParams = new URLSearchParams(window.location.search);
         const targetUrl = urlParams.get('target') || urlParams.get('url');
+        
+        // 设置分享链接为防红链接
+        const ogUrl = document.querySelector('meta[property="og:url"]');
+        if (ogUrl) ogUrl.content = window.location.href;
         
         if (targetUrl) {
           window.location.replace(targetUrl);
