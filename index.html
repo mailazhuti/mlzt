@@ -5,77 +5,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title></title>
     
-    <!-- 动态分享标签 -->
-    <meta property="og:title" content="" />
-    <meta property="og:description" content="" />
-    <meta property="og:image" content="" />
-    <meta property="og:url" content="" />
-    <meta property="og:type" content="website" />
-    
     <script>
       (function() {
         const urlParams = new URLSearchParams(window.location.search);
         const targetUrl = urlParams.get('target') || urlParams.get('url');
         
-        // 设置分享链接为防红链接
-        const ogUrl = document.querySelector('meta[property="og:url"]');
-        if (ogUrl) ogUrl.content = window.location.href;
-        
         if (targetUrl) {
-          // 判断目标页面类型并设置分享信息
-          if (targetUrl.includes('test-share.html')) {
-            // 测试页面：使用静态配置
-            document.title = '1113333333';
-            document.querySelector('meta[property="og:title"]').content = '1113333333';
-            document.querySelector('meta[property="og:description"]').content = '222222222222222222222222222222';
-            document.querySelector('meta[property="og:image"]').content = 'https://bt.iosv2.top/images/share-image.jpg';
-          } else if (targetUrl.includes('bt.iosv2.top')) {
-            // 主页面：从API获取配置
-            fetch('https://bt.iosv2.top/api/admin/config')
-              .then(response => response.json())
-              .then(data => {
-                if (data.success) {
-                  const config = data.data;
-                  
-                  if (config.share_title && config.share_title.value) {
-                    document.title = config.share_title.value;
-                    document.querySelector('meta[property="og:title"]').content = config.share_title.value;
-                  }
-                  
-                  if (config.share_desc && config.share_desc.value) {
-                    document.querySelector('meta[property="og:description"]').content = config.share_desc.value;
-                  }
-                  
-                  if (config.share_image_url && config.share_image_url.value) {
-                    const imageUrl = config.share_image_url.value.startsWith('http') 
-                      ? config.share_image_url.value 
-                      : 'https://bt.iosv2.top' + config.share_image_url.value;
-                    document.querySelector('meta[property="og:image"]').content = imageUrl;
-                  }
-                }
-              })
-              .catch(error => {
-                console.log('获取配置失败，使用默认值');
-                document.title = '1113333333';
-                document.querySelector('meta[property="og:title"]').content = '1113333333';
-                document.querySelector('meta[property="og:description"]').content = '222222222222222222222222222222';
-                document.querySelector('meta[property="og:image"]').content = 'https://bt.iosv2.top/images/share-image.jpg';
-              });
-          }
-          
-          // 稍微延迟跳转，给微信时间读取更新后的标签
-          setTimeout(function() {
-            window.location.replace(targetUrl);
-          }, 200);
+          window.location.replace(targetUrl);
         }
       })();
     </script>
     
     <style>
-      * {
-        box-sizing: border-box;
-      }
-      
       html, body {
         margin: 0;
         padding: 0;
@@ -86,6 +27,5 @@
     </style>
   </head>
   <body>
-    <!-- 智能跳转 -->
   </body>
 </html>
