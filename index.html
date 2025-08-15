@@ -3,68 +3,44 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title></title>
+    <title>1113333333</title>
     
     <!-- 微信分享配置 Meta 标签 -->
-    <meta property="og:title" content="" />
-    <meta property="og:description" content="" />
-    <meta property="og:image" content="" />
+    <meta property="og:site_name" content="1113333333" />
+    <meta property="og:title" content="1113333333" />
+    <meta property="og:description" content="222222222222222222222222222222" />
+    <meta property="og:image" content="https://bt.iosv2.top/images/share-image.jpg" />
+    <meta property="og:image:width" content="400" />
+    <meta property="og:image:height" content="400" />
     <meta property="og:url" content="" />
     <meta property="og:type" content="website" />
     
-    <!-- 同步获取分享配置 -->
+    <!-- 微信特殊标签 -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="1113333333" />
+    <meta name="twitter:description" content="222222222222222222222222222222" />
+    <meta name="twitter:image" content="https://bt.iosv2.top/images/share-image.jpg" />
+    
+    <!-- 微信浏览器特殊标签 -->
+    <meta name="description" content="222222222222222222222222222222" />
+    <meta name="keywords" content="抽奖,活动,1113333333" />
+    
     <script>
-      (function() {
-        // 从URL参数获取目标链接
+      document.addEventListener('DOMContentLoaded', function() {
         const urlParams = new URLSearchParams(window.location.search);
-        const targetUrl = urlParams.get('url') || 'https://bt.iosv2.top';
+        const targetUrl = urlParams.get('target') || urlParams.get('url');
         
-        // 同步获取配置（使用XMLHttpRequest同步请求）
-        try {
-          const xhr = new XMLHttpRequest();
-          xhr.open('GET', 'https://bt.iosv2.top/api/admin/config', false); // 同步请求
-          xhr.send();
-          
-          if (xhr.status === 200) {
-            const data = JSON.parse(xhr.responseText);
-            if (data.success) {
-              const config = data.data;
-              
-              // 立即更新 meta 标签
-              if (config.share_title && config.share_title.value) {
-                document.title = config.share_title.value;
-                const ogTitle = document.querySelector('meta[property="og:title"]');
-                if (ogTitle) ogTitle.content = config.share_title.value;
-              }
-              
-              if (config.share_desc && config.share_desc.value) {
-                const ogDesc = document.querySelector('meta[property="og:description"]');
-                if (ogDesc) ogDesc.content = config.share_desc.value;
-              }
-              
-              if (config.share_image_url && config.share_image_url.value) {
-                const ogImage = document.querySelector('meta[property="og:image"]');
-                if (ogImage) {
-                  const imageUrl = config.share_image_url.value.startsWith('http') 
-                    ? config.share_image_url.value 
-                    : 'https://bt.iosv2.top' + config.share_image_url.value;
-                  ogImage.content = imageUrl;
-                }
-              }
-              
-              const ogUrl = document.querySelector('meta[property="og:url"]');
-              if (ogUrl) ogUrl.content = window.location.href;
-            }
-          }
-        } catch (error) {
-          console.log('Failed to load share config:', error);
+        // 更新 og:url 为当前页面URL
+        const ogUrl = document.querySelector('meta[property="og:url"]');
+        if (ogUrl) ogUrl.content = window.location.href;
+        
+        if (targetUrl) {
+          // 给微信足够时间读取meta标签
+          setTimeout(function() {
+            window.location.replace(targetUrl);
+          }, 1000);
         }
-        
-        // 延迟跳转，给微信时间读取meta标签
-        setTimeout(function() {
-          window.location.href = targetUrl;
-        }, 500);
-      })();
+      });
     </script>
     
     <style>
@@ -79,15 +55,9 @@
         height: 100%;
         overflow: hidden;
       }
-      
-      .container {
-        min-height: 100vh;
-        width: 100%;
-        display: none;
-      }
     </style>
   </head>
   <body>
-    <div class="container"></div>
+    <!-- 空页面，静默跳转 -->
   </body>
 </html>
