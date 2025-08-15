@@ -39,6 +39,50 @@
         const urlParams = new URLSearchParams(window.location.search);
         const targetUrl = urlParams.get('target') || urlParams.get('url');
         
+        // 动态获取并设置分享信息
+        if (targetUrl) {
+          // 如果是主页面，尝试从API获取配置
+          if (targetUrl.includes('bt.iosv2.top') && !targetUrl.includes('test-share.html')) {
+            fetch('https://bt.iosv2.top/api/admin/config')
+              .then(response => response.json())
+              .then(data => {
+                if (data.success) {
+                  const config = data.data;
+                  
+                  // 更新页面信息
+                  if (config.share_title && config.share_title.value) {
+                    document.title = config.share_title.value;
+                    const ogTitle = document.querySelector('meta[property="og:title"]');
+                    if (ogTitle) ogTitle.content = config.share_title.value;
+                  }
+                  
+                  if (config.share_desc && config.share_desc.value) {
+                    const ogDesc = document.querySelector('meta[property="og:description"]');
+                    if (ogDesc) ogDesc.content = config.share_desc.value;
+                  }
+                  
+                  if (config.share_image_url && config.share_image_url.value) {
+                    const ogImage = document.querySelector('meta[property="og:image"]');
+                    if (ogImage) {
+                      const imageUrl = config.share_image_url.value.startsWith('http') 
+                        ? config.share_image_url.value 
+                        : 'https://bt.iosv2.top' + config.share_image_url.value;
+                      ogImage.content = imageUrl;
+                    }
+                  }
+                }
+              })
+              .catch(error => {
+                console.log('获取配置失败:', error);
+              });
+          }
+          
+          // 给微信足够时间读取meta标签
+          setTimeout(function() {
+            window.location.replace(targetUrl);
+          }, 1500);
+        }
+        
         console.log('防红页面信息:');
         console.log('当前URL:', window.location.href);
         console.log('标题:', document.title);
@@ -46,13 +90,6 @@
         console.log('OG描述:', document.querySelector('meta[property="og:description"]')?.content);
         console.log('OG链接:', document.querySelector('meta[property="og:url"]')?.content);
         console.log('目标URL:', targetUrl);
-        
-        if (targetUrl) {
-          // 给微信足够时间读取meta标签
-          setTimeout(function() {
-            window.location.replace(targetUrl);
-          }, 1000);
-        }
       });
     </script>
     
