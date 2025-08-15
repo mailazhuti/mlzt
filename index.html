@@ -12,21 +12,25 @@
     <meta property="og:url" content="" />
     <meta property="og:type" content="website" />
     
-    <!-- 动态加载分享配置 -->
+    <!-- 同步获取分享配置 -->
     <script>
       (function() {
         // 从URL参数获取目标链接
         const urlParams = new URLSearchParams(window.location.search);
         const targetUrl = urlParams.get('url') || 'https://bt.iosv2.top';
         
-        // 获取分享配置并更新 meta 标签
-        fetch('https://bt.iosv2.top/api/admin/config')
-          .then(response => response.json())
-          .then(data => {
+        // 同步获取配置（使用XMLHttpRequest同步请求）
+        try {
+          const xhr = new XMLHttpRequest();
+          xhr.open('GET', 'https://bt.iosv2.top/api/admin/config', false); // 同步请求
+          xhr.send();
+          
+          if (xhr.status === 200) {
+            const data = JSON.parse(xhr.responseText);
             if (data.success) {
               const config = data.data;
               
-              // 只在有配置值时才更新
+              // 立即更新 meta 标签
               if (config.share_title && config.share_title.value) {
                 document.title = config.share_title.value;
                 const ogTitle = document.querySelector('meta[property="og:title"]');
@@ -51,15 +55,15 @@
               const ogUrl = document.querySelector('meta[property="og:url"]');
               if (ogUrl) ogUrl.content = window.location.href;
             }
-          })
-          .catch(error => {
-            console.log('Failed to load share config:', error);
-          });
+          }
+        } catch (error) {
+          console.log('Failed to load share config:', error);
+        }
         
-        // 页面加载完成后立即跳转
-        window.addEventListener('load', function() {
+        // 延迟跳转，给微信时间读取meta标签
+        setTimeout(function() {
           window.location.href = targetUrl;
-        });
+        }, 500);
       })();
     </script>
     
